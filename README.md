@@ -8,16 +8,16 @@ A minimal CLI tool to authenticate via AWS SSO and sync credentials to `~/.aws/c
 
 ```bash
 # Linux amd64
-curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/download/v0.1.0/simple-aws-sso_0.1.0_linux_amd64.tar.gz | tar xz
+curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/latest/download/simple-aws-sso_linux_amd64.tar.gz | tar xz
 
 # Linux arm64
-curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/download/v0.1.0/simple-aws-sso_0.1.0_linux_arm64.tar.gz | tar xz
+curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/latest/download/simple-aws-sso_linux_arm64.tar.gz | tar xz
 
 # macOS arm64 (M1/M2/M3)
-curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/download/v0.1.0/simple-aws-sso_0.1.0_darwin_arm64.tar.gz | tar xz
+curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/latest/download/simple-aws-sso_darwin_arm64.tar.gz | tar xz
 
 # macOS amd64
-curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/download/v0.1.0/simple-aws-sso_0.1.0_darwin_amd64.tar.gz | tar xz
+curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/latest/download/simple-aws-sso_darwin_amd64.tar.gz | tar xz
 ```
 
 ### Build from source
