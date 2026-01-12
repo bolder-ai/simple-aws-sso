@@ -72,6 +72,29 @@ tasks:
     cmds:
       - goreleaser check
 
+  readme:update:
+    desc: Update README with actual GitHub repo URL from git remote
+    cmds:
+      - |
+        REMOTE=$(git remote get-url origin 2>/dev/null)
+        if [ -z "$REMOTE" ]; then
+          echo "No git remote 'origin' found"
+          exit 1
+        fi
+
+        # Extract owner/repo from SSH or HTTPS URL
+        REPO=$(echo "$REMOTE" | sed -E 's#(git@github\.com:|https://github\.com/)##' | sed 's/\.git$//')
+
+        if [ -z "$REPO" ]; then
+          echo "Could not parse GitHub repo from: $REMOTE"
+          exit 1
+        fi
+
+        echo "Updating README with repo: $REPO"
+        sed -i.bak "s|YOUR_USER/simple-aws-sso|$REPO|g" README.md
+        rm -f README.md.bak
+        echo "Done"
+
   version:
     desc: Show current version
     cmds:
