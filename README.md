@@ -1,8 +1,8 @@
-# simple-aws-sso
+# 🔐 simple-aws-sso
 
 A minimal CLI tool to authenticate via AWS SSO and sync credentials to `~/.aws/credentials`.
 
-## Installation
+## 📦 Installation
 
 ### Download binary
 
@@ -26,19 +26,43 @@ curl -sSL https://github.com/YOUR_USER/simple-aws-sso/releases/download/v0.1.0/s
 go install github.com/YOUR_USER/simple-aws-sso@latest
 ```
 
-## Configuration
+## ⚙️ Configuration
 
-All options can be set via environment variables or flags. Flags take precedence.
+Configuration is loaded with the following precedence (highest to lowest):
 
-| Flag | Environment Variable | Description |
-|------|---------------------|-------------|
-| `--sso-url` | `AWS_SSO_URL` | AWS SSO start URL |
-| `--account-id` | `AWS_SSO_ACCOUNT_ID` | AWS account ID |
-| `--profile` | `AWS_PROFILE` | Profile name in credentials file |
-| `--region` | `AWS_REGION` | AWS region for SSO |
-| `--role` | `AWS_SSO_ROLE` | AWS SSO role name |
+1. **Flags** — command line arguments
+2. **Environment variables**
+3. **~/.aws/config** — per-profile SSO settings
 
-## Usage
+| Flag | Environment Variable | ~/.aws/config key |
+|------|---------------------|-------------------|
+| `--profile` | `AWS_PROFILE` | — |
+| `--sso-url` | `AWS_SSO_URL` | `sso_start_url` |
+| `--account-id` | `AWS_SSO_ACCOUNT_ID` | `sso_account_id` |
+| `--region` | `AWS_REGION` | `sso_region` |
+| `--role` | `AWS_SSO_ROLE` | `sso_role_name` |
+
+## 🚀 Usage
+
+### Using ~/.aws/config (simplest)
+
+If your profile is already configured in `~/.aws/config`:
+
+```ini
+[profile dev]
+sso_start_url = https://mycompany.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 123456789012
+sso_role_name = AdministratorAccess
+```
+
+Just run:
+
+```bash
+simple-aws-sso --profile dev
+# or
+AWS_PROFILE=dev simple-aws-sso
+```
 
 ### With environment variables
 
@@ -63,16 +87,13 @@ simple-aws-sso \
   --region "eu-west-1"
 ```
 
-### Mixed (flags override env vars)
+### Mixed (flags override env vars and config)
 
 ```bash
-export AWS_SSO_URL="https://mycompany.awsapps.com/start"
-export AWS_REGION="eu-west-1"
-
-simple-aws-sso --account-id "123456789012" --role "ReadOnly" --profile "prod"
+AWS_PROFILE=dev simple-aws-sso --role "ReadOnly"
 ```
 
-## Output
+## ✅ Output
 
 ```
 → Opening browser for SSO login...
@@ -89,18 +110,18 @@ simple-aws-sso --account-id "123456789012" --role "ReadOnly" --profile "prod"
   Expires:  2026-01-12 14:30:00
 ```
 
-## Development
+## 🛠️ Development
 
 Requires Go 1.25+ and [Task](https://taskfile.dev/).
 
 ```bash
-task build          # Build to bin/
-task run            # Build and run
-task test           # Run tests
-task clean          # Remove build artifacts
+task build             # Build to bin/
+task run               # Build and run
+task test              # Run tests
+task clean             # Remove build artifacts
 task release:snapshot  # Build release locally (requires goreleaser)
 ```
 
-## License
+## 📄 License
 
 MIT
