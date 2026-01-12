@@ -71,3 +71,46 @@ tasks:
     desc: Validate goreleaser config
     cmds:
       - goreleaser check
+
+  version:
+    desc: Show current version
+    cmds:
+      - |
+        TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+        echo "Current version: $TAG"
+
+  release:
+    desc: "Create a release: task release -- [patch|minor|major]"
+    cmds:
+      - |
+        BUMP_TYPE="{{.CLI_ARGS}}"
+        if [ -z "$BUMP_TYPE" ]; then
+          echo "Usage: task release -- [patch|minor|major]"
+          exit 1
+        fi
+
+        TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+        MAJOR=$(echo $TAG | sed 's/v//' | cut -d. -f1)
+        MINOR=$(echo $TAG | sed 's/v//' | cut -d. -f2)
+        PATCH=$(echo $TAG | sed 's/v//' | cut -d. -f3)
+
+        case "$BUMP_TYPE" in
+          patch)
+            NEW="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+            ;;
+          minor)
+            NEW="v${MAJOR}.$((MINOR + 1)).0"
+            ;;
+          major)
+            NEW="v$((MAJOR + 1)).0.0"
+            ;;
+          *)
+            echo "Invalid bump type: $BUMP_TYPE"
+            echo "Usage: task release -- [patch|minor|major]"
+            exit 1
+            ;;
+        esac
+
+        echo "Bumping $TAG → $NEW"
+        git tag $NEW
+        git push origin $NEW
