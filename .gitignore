@@ -1,4 +1,34 @@
+# Build outputs
 bin/
 dist/
+
+# Task
+.task/
+
+# Test coverage
 coverage.out
 coverage.html
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Debug
+*.log
+debug

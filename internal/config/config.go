@@ -12,11 +12,12 @@ import (
 )
 
 type Config struct {
-	SSOURL    string
-	AccountID string
-	Profile   string
-	Region    string
-	Role      string
+	SSOURL       string
+	AccountID    string
+	Profile      string
+	Region       string
+	Role         string
+	ValidateCreds bool // validate credentials with STS before saving
 }
 
 // awsConfigProfile holds SSO settings from ~/.aws/config
@@ -36,6 +37,7 @@ func Load() (*Config, error) {
 	flag.StringVar(&cfg.Profile, "profile", "", "AWS profile name for credentials file")
 	flag.StringVar(&cfg.Region, "region", "", "AWS region for SSO")
 	flag.StringVar(&cfg.Role, "role", "", "AWS SSO role name")
+	flag.BoolVar(&cfg.ValidateCreds, "validate", false, "Validate credentials with STS GetCallerIdentity before saving")
 	flag.Parse()
 
 	// Get profile first (needed to load aws config)

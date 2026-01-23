@@ -50,12 +50,37 @@ func run() error {
 		return err
 	}
 
+	// Validate credentials if requested
+	if cfg.ValidateCreds {
+		ui.Wait("Validating credentials with STS...")
+		identity, err := sso.ValidateCredentials(ctx, cfg.Region, creds)
+		if err != nil {
+			return err
+		}
+		ui.Success("Credentials validated")
+		ui.Print("  %s %s\n", ui.Dim("ARN:"), identity.Arn)
+	}
+
 	// Write credentials to file
 	if err := awscreds.WriteCredentials(cfg.Profile, creds); err != nil {
 		return err
 	}
-
 	ui.Success("Credentials written to %s", ui.Cyan("~/.aws/credentials"))
+
+	// Post-write validation: read back and verify
+	if cfg.ValidateCreds {
+		ui.Wait("Verifying saved credentials...")
+		savedCreds, err := awscreds.ReadCredentials(cfg.Profile)
+		if err != nil {
+			return fmt.Errorf("failed to read back saved credentials: %w", err)
+		}
+		identity, err := sso.ValidateCredentials(ctx, cfg.Region, savedCreds)
+		if err != nil {
+			return fmt.Errorf("saved credentials are invalid: %w", err)
+		}
+		ui.Success("Saved credentials verified")
+		ui.Print("  %s %s\n", ui.Dim("ARN:"), identity.Arn)
+	}
 	ui.Println()
 	ui.Print("  %s  %s\n", ui.Dim("Profile:"), ui.Bold(cfg.Profile))
 	ui.Print("  %s     %s\n", ui.Dim("Role:"), cfg.Role)
